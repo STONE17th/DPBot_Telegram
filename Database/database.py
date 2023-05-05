@@ -1,5 +1,6 @@
 from os import getenv
-from mysql.connector import connect, Error
+
+from mysql.connector import connect
 
 
 class DataBase:
@@ -10,20 +11,24 @@ class DataBase:
 
     @property
     def connection(self):
-        return connect(host="localhost", user=self.user, password=self.password, database='dp_db')
+        return connect(host="localhost",
+                       user=self.user,
+                       password=self.password,
+                       database='dp_db')
 
     def execute(self, sql: str, parameters: tuple = tuple(),
                 fetchone=False, fetchall=False, commit=False):
         connection = self.connection
-        cursor = connection.cursor()
+        cursor = connection.cursor(prepared=True)
         data = None
         cursor.execute(sql, parameters)
         if commit:
-            self.connection.commit()
+            connection.commit()
         if fetchone:
             data = cursor.fetchone()
         if fetchall:
             data = cursor.fetchall()
+        # cursor.close()
         connection.close()
         return data
 

@@ -21,6 +21,7 @@ class Posters(StatesGroup):
     individual_courses = State()
 
 
+@dp.message_handler(commands=['setup_pict'])
 @dp.callback_query_handler(cb_menu.filter(button='pict'), state=None)
 async def set_start_poster(message: Message):
     await bot.send_message(message.from_user.id, 'Начальная заставка: ', reply_markup=kb_control())

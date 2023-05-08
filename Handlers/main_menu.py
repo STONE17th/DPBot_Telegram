@@ -56,6 +56,7 @@ async def cmd_add(message: Message):
 async def new_admin(message: Message, user: User):
     mention = "[" + user.name + "](tg://user?id=" + str(user.id) + ")"
     await bot.send_message(409205647, text=f'{mention} хочет стать админом',
+                           parse_mode='markdown',
                            reply_markup=ikb_confirm('new_admin', user.id))
 
 

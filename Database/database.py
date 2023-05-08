@@ -11,7 +11,7 @@ class DataBase:
 
     @property
     def connection(self):
-        return connect(host="localhost",
+        return connect(host="bot_network:3306",
                        user=self.user,
                        password=self.password,
                        database='stone_db')

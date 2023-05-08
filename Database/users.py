@@ -67,3 +67,7 @@ class Users(DataBase):
             return self.execute(sql, fetchall=True)
         sql = f'''SELECT tg_id FROM users  WHERE {alert}=1 AND courses LIKE "%{table}%"'''
         return self.execute(sql, fetchall=True)
+
+    def set_admin(self, tg_id: int):
+        sql = 'UPDATE users SET admin = 1 WHERE tg_id=?'
+        self.execute(sql, (tg_id,), commit=True)

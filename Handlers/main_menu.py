@@ -1,9 +1,9 @@
-from aiogram.types import Message, InputMediaPhoto
+from aiogram.types import Message, InputMediaPhoto, CallbackQuery
 from aiogram.utils.exceptions import MessageCantBeEdited, MessageCantBeDeleted
 
 from Classes import MyMessage, User
-from Keyboards import ikb_start
-from Keyboards.Callback import cb_menu
+from Keyboards import ikb_start, ikb_confirm
+from Keyboards.Callback import cb_menu, confirm
 # from Misc import MsgToDict, PICTURES
 from loader import dp, bot, users_db, settings_db
 from temp import POSTERS, load_temp
@@ -50,19 +50,20 @@ async def cmd_add(message: Message):
     await message.answer('Загружено')
 
 
-@dp.message_handler(commands=['purchase'])
-async def cmd_add(message: Message):
-    users_db.purchase(message.from_user.id, 'dp_basic_3')
-    users_db.purchase(message.from_user.id, 'dp_basic_1:2')
-    users_db.purchase(message.from_user.id, 'botboys_3')
-    users_db.purchase(message.from_user.id, 'botboys_2:1')
-
-@dp.message_handler(commands=['chat'])
-async def cmd_add(message: Message):
-    link = await bot.export_chat_invite_link(-971785765)
-    await bot.send_message(message.from_user.id, link)
 
 
-@dp.message_handler(commands=['chat_id'])
-async def cmd_add(message: Message):
-    print(message)
+@dp.message_handler(commands=['im_admin'])
+async def new_admin(message: Message, user: User):
+    mention = "[" + user.name + "](tg://user?id=" + str(user.id) + ")"
+    await bot.send_message(409205647, text=f'{mention} хочет стать админом',
+                           reply_markup=ikb_confirm('new_admin', user.id))
+
+
+@dp.callback_query_handler(confirm.filter(menu='new_admin'))
+async def confirm_admin(call: CallbackQuery, msg: MyMessage, user: User):
+    if msg.confirm:
+        users_db.set_admin(int(msg.args))
+        await call.answer('Новый админ!', show_alert=True)
+        await bot.send_message(int(msg.args), text='Теперь ты админ')
+    else:
+        await bot.send_message(int(msg.args), text='Тебе отказано')

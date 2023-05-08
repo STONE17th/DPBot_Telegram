@@ -14,7 +14,7 @@ class DataBase:
         return connect(host="localhost",
                        user=self.user,
                        password=self.password,
-                       database='dp_db')
+                       database='stone_db')
 
     def execute(self, sql: str, parameters: tuple = tuple(),
                 fetchone=False, fetchall=False, commit=False):

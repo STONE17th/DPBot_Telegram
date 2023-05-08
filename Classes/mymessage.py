@@ -12,15 +12,16 @@ class MyMessage:
             self.data = update.data.split(':')
             if self.data:
                 match self.data:
-                    case ['list_navigation', _, task_type, level, current_id]:
+                    case ['navigation', menu, task_type, task_level, current_id]:
+                        self.menu = menu
                         self.type = task_type
-                        self.level = level
+                        self.level = task_level
                         self.id = int(current_id)
                     case ['course_navigation', _, table, lecture_id]:
                         self.table = table
                         self.id = int(lecture_id)
-                    case ['settings_option', menu, button]:
-                        self.menu = menu
+                    case [_, 'settings', button]:
+                        # self.menu = name
                         self.button = button
                     case ['confirm', menu, args, button]:
                         self.menu = menu

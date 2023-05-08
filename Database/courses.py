@@ -14,6 +14,7 @@ class Courses(DataBase):
         description VARCHAR(500),
         poster VARCHAR(150),
         tg_url VARCHAR(50),
+        tg_id INT,
         disc_url VARCHAR(50),
         quantity INT,
         start_date VARCHAR(10),
@@ -37,14 +38,9 @@ class Courses(DataBase):
         PRIMARY KEY (lecture_id))'''
         self.execute(sql, commit=True)
 
-    @property
-    def is_finished(self):
-        if self.is_finished == 1:
-            return True
-        elif self.is_finished == 0:
-            return False
-        else:
-            return 'Архив'
+    def name(self, table_name: str) -> tuple[str]:
+        sql = 'SELECT name FROM courses WHERE table_name=?'
+        return self.execute(sql, (table_name,), fetchone=True)[0]
 
     def add(self, data: dict[str, str | int]):
         new_course = (data.get('table_name'), data.get('name'), data.get('description'),
@@ -67,10 +63,23 @@ class Courses(DataBase):
         sql = '''SELECT * FROM courses'''
         return self.execute(sql, fetchall=True)
 
-    def lecture(self, table_name: str, index: int = 0) -> tuple | list[tuple]:
-        if index:
-            sql = f'''SELECT * FROM course_{table_name} WHERE lecture_id={index+1}'''
-            return self.execute(sql, fetchone=True)
-        sql = f'''SELECT * FROM course_{table_name}'''
-        return self.execute(sql, fetchall=True)
+    def update(self, data: tuple, table_name: str, index: int):
+        sql = f'''UPDATE course_{table_name} SET name=?, description=?, poster=?, lect_url=?, semi_url=?, comp_url=?, 
+        date=?, price=?, finished=? WHERE lecture_id=?'''
+        params = data + (1, index + 1)
+        self.execute(sql, params, commit=True)
 
+    def finalize(self, table_name: str):
+        sql = '''UPDATE courses SET finished = finished + 1 WHERE table_name=?'''
+        self.execute(sql, (table_name,), commit=True)
+
+    def select(self, table_name: str) -> tuple:
+        sql = '''SELECT * FROM courses WHERE table_name=?'''
+        return self.execute(sql, (table_name,), fetchone=True)
+
+    def lecture(self, table_name: str, admin: bool = False, index: int = -1) -> tuple | list[tuple]:
+        if index >= 0:
+            sql = f'''SELECT * FROM course_{table_name} WHERE lecture_id={index + 1}'''
+            return self.execute(sql, fetchone=True)
+        sql = f'''SELECT * FROM course_{table_name}''' + ('' if admin else ' WHERE finished = 1')
+        return self.execute(sql, fetchall=True)

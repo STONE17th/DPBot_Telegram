@@ -2,8 +2,8 @@ from aiogram.utils import executor
 
 import Middleware
 from Handlers import dp
-from loader import courses_db, lectures_db, settings_db, streams_db, tasks_db, users_db
-from temp import load_posters, load_courses, POSTERS, COURSES
+from loader import courses_db, settings_db, streams_db, tasks_db, users_db
+from temp import load_temp
 
 
 async def on_start(_):
@@ -15,11 +15,10 @@ async def on_start(_):
         tasks_db.create_table()
         users_db.create_table()
         print('Database... OK!!!')
-        load_posters()
-        load_courses()
+        # load_temp()
     except:
         print('Database... FAILURE')
-
+    load_temp()
 
 if __name__ == '__main__':
     Middleware.setup(dp)

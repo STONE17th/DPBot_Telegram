@@ -2,6 +2,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import Message, ReplyKeyboardRemove
 
+from Keyboards.Callback import cb_menu
 from Keyboards import kb_control
 from loader import dp, bot, settings_db
 
@@ -16,10 +17,11 @@ class Posters(StatesGroup):
     task_normal = State()
     task_hard = State()
     settings = State()
+    links = State()
     individual_courses = State()
 
 
-@dp.message_handler(commands=['setup_pict'], state=None)
+@dp.callback_query_handler(cb_menu.filter(button='pict'), state=None)
 async def set_start_poster(message: Message):
     await bot.send_message(message.from_user.id, 'Начальная заставка: ', reply_markup=kb_control())
     await Posters.start_poster.set()
@@ -88,11 +90,18 @@ async def set_start_poster(message: Message, state: FSMContext):
     await bot.send_message(message.from_user.id, 'Настройки: ', reply_markup=kb_control())
     await Posters.next()
 
-
 @dp.message_handler(content_types=['photo', 'text'], state=Posters.settings)
 async def set_start_poster(message: Message, state: FSMContext):
     if message.text != 'Дальше':
         await state.update_data({'settings': message.photo[0].file_id})
+    await bot.send_message(message.from_user.id, 'Ссылки: ', reply_markup=kb_control())
+    await Posters.next()
+
+
+@dp.message_handler(content_types=['photo', 'text'], state=Posters.links)
+async def set_start_poster(message: Message, state: FSMContext):
+    if message.text != 'Дальше':
+        await state.update_data({'links': message.photo[0].file_id})
     await bot.send_message(message.from_user.id, 'Индивидуалочки: ', reply_markup=kb_control())
     await Posters.next()
 

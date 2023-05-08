@@ -1,7 +1,7 @@
 from aiogram.utils.callback_data import CallbackData
 
 cb_menu = CallbackData('menu', 'name', 'button')
-navigation = CallbackData('top', 'mid', 'low', 'id')
+navigation = CallbackData('navigation', 'menu', 'type', 'level', 'id')
 course_navigation = CallbackData('course_navigation', 'menu', 'table', 'current_id')
 
 confirm = CallbackData('confirm', 'menu', 'args', 'button')

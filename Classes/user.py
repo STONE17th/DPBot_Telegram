@@ -12,4 +12,19 @@ class User:
 
     @property
     def is_admin(self) -> bool:
+        return True if self._admin else False
+
+    @property
+    def is_active_admin(self) -> bool:
         return True if self._admin == 1 else False
+
+    def alert(self, alert_type: str):
+        match alert_type:
+            case 'stream':
+                return True if self.alert_stream else False
+        match alert_type:
+            case 'course':
+                return True if self.alert_course else False
+        match alert_type:
+            case 'news':
+                return True if self.alert_news else False

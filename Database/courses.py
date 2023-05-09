@@ -44,10 +44,10 @@ class Courses(DataBase):
 
     def add(self, data: dict[str, str | int]):
         new_course = (data.get('table_name'), data.get('name'), data.get('description'),
-                      data.get('poster'), data.get('tg_url'), data.get('disc_url'),
-                      data.get('quantity'), data.get('start_date'), data.get('price'), 0)
-        sql = f'''INSERT INTO courses (table_name, name, description, poster, tg_url, disc_url, 
-        quantity, start_date, price, finished) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+                      data.get('poster'), data.get('disc_url'), data.get('quantity'),
+                      data.get('start_date'), data.get('price'), 0)
+        sql = f'''INSERT INTO courses (table_name, name, description, poster, disc_url, 
+        quantity, start_date, price, finished) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
         self.execute(sql, new_course, commit=True)
         self.create_course_table(data.get('table_name'))
         new_lecture = (None, None, data.get('poster'), None, None, None, None, None, 0)

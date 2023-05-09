@@ -58,14 +58,7 @@ async def enter_poster(message: Message, state: FSMContext):
 @dp.message_handler(content_types='photo', state=NewCourse.poster)
 async def enter_tg_url(message: Message, state: FSMContext):
     await state.update_data({'poster': message.photo[0].file_id})
-    await message.answer(text='Введите телеграм-канал курса:', reply_markup=kb_control())
-    await NewCourse.next()
-
-
-@dp.message_handler(state=NewCourse.tg_url)
-async def enter_disc_url(message: Message, state: FSMContext):
-    await state.update_data({'tg_url': message.text})
-    await message.answer(text='Введите адрес облака:', reply_markup=kb_control())
+    await message.answer(text='Введите яндекс-облако курса:', reply_markup=kb_control())
     await NewCourse.next()
 
 
@@ -97,8 +90,7 @@ async def confirm_new_course(message: Message, state: FSMContext):
     caption = f"Название: {data.get('name')}\n\nНазвание таблицы: {data.get('table_name')}\n\n" \
               f"Продолжительность: {data.get('quantity')} лекций\n\n" \
               f"Описание: {data.get('description')}\n\nРабочая папка: {data.get('disc_url')}\n" \
-              f"Телеграм-чат: {data.get('tg_url')}\n\nЦена курса: " \
-              f"{data.get('price')}\n\nДата начала: {data.get('start_date')}"
+              f"\n\nЦена курса: {data.get('price')}\n\nДата начала: {data.get('start_date')}"
     await bot.send_photo(chat_id=message.from_user.id, photo=data.get('poster'), caption=caption,
                          reply_markup=ikb_confirm('course', 'confirm'))
     await NewCourse.next()

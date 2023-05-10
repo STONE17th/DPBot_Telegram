@@ -12,7 +12,7 @@ def ikb_confirm(target: str, args: str = '') -> InlineKeyboardMarkup:
     btn_yes = InKB(text='Да', callback_data=crt_cb(target, args, 'yes'))
     btn_no = InKB(text='Нет', callback_data=crt_cb(target, args, 'no'))
     if target == 'task':
-        btn_yes = InKB(text='Да', callback_data=navigation.new(menu='types', type='', level='', id=0))
+        btn_yes = InKB(text='Да', callback_data=cb_menu.new(name='', button='add_task'))
         btn_no = InKB(text='В меню', callback_data=cb_menu.new(name='', button='back'))
     keyboard.add(btn_yes, btn_no)
 

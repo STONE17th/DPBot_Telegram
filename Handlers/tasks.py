@@ -62,14 +62,14 @@ async def select_tasks_level(_, user: User, msg: MyMessage):
 @dp.callback_query_handler(cb_menu.filter(button='add_task'))
 async def add_task_command(message: Message):
     await bot.send_message(message.from_user.id, text='Введите тип задачи или введите новый:',
-                           reply_markup=kb_new_task())
+                           reply_markup=kb_new_task(True))
     await NewTask.task_type.set()
 
 
 @dp.message_handler(state=NewTask.task_type)
 async def input_task_type(message: Message, state: FSMContext):
     await state.update_data({'task_type': message.text})
-    await message.answer(text='Введите сложность задачи:', reply_markup=kb_new_task(True))
+    await message.answer(text='Введите сложность задачи:', reply_markup=kb_new_task())
     await NewTask.next()
 
 

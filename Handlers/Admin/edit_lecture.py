@@ -8,8 +8,11 @@ from Keyboards.Callback import course_navigation
 from loader import dp, bot, courses_db
 from Misc import user_notify
 
-KEYS = ('id', 'name', 'description', 'poster', 'lect_url', 'semi_url', 'comp_url', 'date', 'price', 'finished')
+KEYS = ('id', 'lect_semi', 'name', 'description', 'poster', 'lect_url', 'semi_url', 'comp_url', 'date', 'price', 'finished')
+
+
 class Lecture(StatesGroup):
+    lect_semi = State()
     name = State()
     description = State()
     poster = State()
@@ -25,8 +28,20 @@ class Lecture(StatesGroup):
 async def new_lecture_catch(_, msg: MyMessage, user: User, state: FSMContext):
     await state.update_data({'table_name': msg.table})
     await state.update_data({'id': msg.id})
-    await bot.send_message(user.id, 'Введите название лекции:', reply_markup=kb_control())
-    await Lecture.name.set()
+    await bot.send_message(user.id, 'Лекция или семинар:', reply_markup=kb_control('lect_semi'))
+    await Lecture.lect_semi.set()
+
+
+@dp.message_handler(state=Lecture.lect_semi)
+async def desc_catch(message: Message, user: User, state: FSMContext):
+    if message.text in ['Лекция', 'Семинар', 'Дальше']:
+        if message.text in ['Лекция', 'Семинар']:
+            data = 1 if message.text == 'Лекция' else 2
+            await state.update_data({'lect_semi': data})
+        await message.answer(text='Введите описание лекции:', reply_markup=kb_control())
+        await Lecture.next()
+    else:
+        await bot.send_message(user.id, 'Лекция или семинар:', reply_markup=kb_control('lect_semi'))
 
 
 @dp.message_handler(state=Lecture.name)
@@ -35,7 +50,6 @@ async def desc_catch(message: Message, state: FSMContext):
         await state.update_data({'name': message.text})
     await message.answer(text='Введите описание лекции:', reply_markup=kb_control())
     await Lecture.next()
-
 
 @dp.message_handler(state=Lecture.description)
 async def poster_catch(message: Message, state: FSMContext):
@@ -90,9 +104,10 @@ async def confirm_catch(message: Message, state: FSMContext, msg: MyMessage):
     if message.text != 'Дальше':
         await state.update_data({'price': message.text})
     data = await state.get_data()
-    caption = f"Название: {data.get('name')}\nОписание: {data.get('description')}\n\n" \
-              f"Ссылка на видео: {data.get('lect_url')}\nСсылка на семинар: {data.get('semi_url')}" \
-              f"\nСсылка на конспект: {data.get('comp_url')}\n\nДата лекции: {data.get('date')}\n\nЦена курса: {data.get('price')}"
+    caption = f"Название: {data.get('name')} ({'Лекция' if data.get('lect_semi') == 1 else 'Семинар'})\nОписание: " \
+              f"{data.get('description')}\n\nСсылка на видео: {data.get('lect_url')}\nСсылка на семинар: " \
+              f"{data.get('semi_url')}\nСсылка на конспект: {data.get('comp_url')}\n\nДата лекции: " \
+              f"{data.get('date')}\n\nЦена курса: {data.get('price')}"
     if data.get('poster'):
         await bot.send_photo(chat_id=msg.chat_id, photo=data.get('poster'), caption=caption,
                              reply_markup=ikb_confirm('class', 'confirm'))

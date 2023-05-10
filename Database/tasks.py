@@ -15,6 +15,10 @@ class Tasks(DataBase):
         PRIMARY KEY (task_id))'''
         self.execute(sql, commit=True)
 
+    def add(self, params: tuple[str]):
+        sql = 'INSERT INTO tasks (task_type, task_level, task) VALUES (?, ?, ?)'
+        self.execute(sql, params, commit=True)
+
     def collect(self, task_type: str = None, task_level: str = None) -> tuple:
         sql = 'SELECT task_type FROM tasks'
         params = ()

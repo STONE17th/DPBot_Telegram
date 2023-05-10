@@ -22,7 +22,6 @@ class NewCourse(StatesGroup):
     course_confirm = State()
 
 
-
 @dp.callback_query_handler(cb_menu.filter(button='new_course'), state=None)
 async def enter_table(message: Message):
     await bot.send_message(message.from_user.id, 'Введите название таблицы:', reply_markup=kb_control())
@@ -108,4 +107,3 @@ async def save_new_course(call: CallbackQuery, msg: MyMessage, state: FSMContext
     await state.finish()
     await bot.send_message(call.message.chat.id, text='Вернуться в главное меню /start')
     # await cmd_start(message)
-

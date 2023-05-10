@@ -10,6 +10,7 @@ class Courses(DataBase):
         sql = '''CREATE TABLE IF NOT EXISTS courses 
         (course_id INT AUTO_INCREMENT,
         table_name VARCHAR(20),
+        lect_semi INTEGER,
         name VARCHAR(50),
         description VARCHAR(500),
         poster VARCHAR(150),
@@ -68,8 +69,8 @@ class Courses(DataBase):
         self.execute(sql, (invite_link, chat_id, 0, table_name), commit=True)
 
     def update(self, data: tuple, table_name: str, index: int):
-        sql = f'''UPDATE course_{table_name} SET name=?, description=?, poster=?, lect_url=?, semi_url=?, comp_url=?, 
-        date=?, price=?, finished=? WHERE lecture_id=?'''
+        sql = f'''UPDATE course_{table_name} SET lect_semi=?, name=?, description=?, poster=?, lect_url=?, semi_url=?, 
+        comp_url=?, date=?, price=?, finished=? WHERE lecture_id=?'''
         params = data + (1, index + 1)
         self.execute(sql, params, commit=True)
 

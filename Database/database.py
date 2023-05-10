@@ -11,10 +11,10 @@ class DataBase:
 
     @property
     def connection(self):
-        return connect(host="localhost",
+        return connect(host="db",
                        user=self.user,
                        password=self.password,
-                       database='dp_db')
+                       database='stone_db')
 
     def execute(self, sql: str, parameters: tuple = tuple(),
                 fetchone=False, fetchall=False, commit=False):

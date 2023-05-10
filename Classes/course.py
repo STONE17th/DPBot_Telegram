@@ -9,13 +9,18 @@ class Course:
         self.description = data[3]
         self.poster = data[4]
         self.tg_url = data[5]
-        self.disc_url = data[6]
-        self.quantity = data[7]
-        self.start_date = data[8]
-        self.price = data[9]
-        self.finished = data[10]
+        self.tg_id = data[6]
+        self.disc_url = data[7]
+        self.lectures_seminars = data[8]
+        self.start_date = data[9]
+        self.price = data[10]
+        self.finished = data[11]
         lectures = courses_db.lecture(self.table_name, full)
         self.lecture = [Lecture(lecture, self.table_name) for lecture in lectures]
+
+    @property
+    def quantity(self) -> int:
+        return sum(map(int, self.lectures_seminars.split(':')))
 
     @property
     def progress(self) -> str:
@@ -26,9 +31,8 @@ class Course:
 
     @property
     def is_done(self):
-        all_lectures = courses_db.lecture(self.table_name)
+        all_lectures = courses_db.lecture(self.table_name, True)
         return all([(lambda x: x[-1] == 1)(item) for item in all_lectures])
-
 
     @property
     def button(self):

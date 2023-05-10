@@ -23,7 +23,7 @@ async def select_tasks_type(_, msg: MyMessage, user: User):
     btn_list = [btn[0] for btn in set(tasks_db.collect())]
     await bot.edit_message_media(media=InputMediaPhoto(media=poster, caption=caption),
                                  chat_id=msg.chat_id, message_id=msg.message_id,
-                                 reply_markup=ikb_select_type(btn_list))
+                                 reply_markup=ikb_select_type(btn_list, user))
 
 
 @dp.callback_query_handler(navigation.filter(menu='level'))

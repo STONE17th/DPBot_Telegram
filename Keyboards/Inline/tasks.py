@@ -16,11 +16,14 @@ def cid(size: int, current_id: int, direction: int) -> int:
     return prev_id
 
 
-def ikb_select_type(btn_list: list[str]) -> InlineKeyboardMarkup:
+def ikb_select_type(btn_list: list[str], user: User) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(row_width=2)
     btn_list = [InKB(text=btn, callback_data=crt_cb('level', btn)) for btn in btn_list]
+    btn_new = InKB(text='Новая задача', callback_data=cb_menu.new(name='', button='add_task'))
     btn_back = InKB(text='Назад', callback_data=cb_menu.new(name='', button='back'))
     keyboard.row(*btn_list)
+    if user.is_active_admin:
+        keyboard.add(btn_new)
     keyboard.row(btn_back)
     return keyboard
 

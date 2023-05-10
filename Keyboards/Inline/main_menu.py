@@ -21,3 +21,10 @@ def ikb_start(admin: bool) -> InlineKeyboardMarkup:
     keyboard.add(btn_my_settings, btn_links)
 
     return keyboard
+
+
+def ikb_main():
+    keyboard = InlineKeyboardMarkup(row_width=1)
+    btn_main = InKB(text='В меню', callback_data=cb_menu.new(name='', button='back'))
+    keyboard.add(btn_main)
+    return keyboard

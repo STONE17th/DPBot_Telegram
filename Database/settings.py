@@ -29,3 +29,7 @@ class Settings(DataBase):
     def load(self, set_type) -> tuple:
         sql = '''SELECT * FROM settings WHERE set_type=?'''
         return self.execute(sql, (set_type,), fetchall=True)
+
+    def select(self, platform: str) -> str:
+        sql = 'SELECT value FROM settings WHERE name=?'
+        return self.execute(sql, (platform,), fetchone=True)[0]

@@ -39,7 +39,7 @@ def ikb_links(user: User) -> InlineKeyboardMarkup:
     link_list = {link[4]: link[3] for link in settings_db.load('link')}
     for text, link in link_list.items():
         keyboard.insert(InKB(url=link, text=text))
-    btn_add = InKB(text='Обновить', callback_data=cb_menu.new(name='', button='setup_link'))
+    btn_add = InKB(text='Обновить', callback_data=cb_menu.new(name='', button='setup_links'))
     btn_back = InKB(text='Назад', callback_data=cb_menu.new(name='', button='back'))
     if user.is_active_admin:
         keyboard.add(btn_add, btn_back)

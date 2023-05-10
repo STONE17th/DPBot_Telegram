@@ -17,6 +17,7 @@ class Posters(StatesGroup):
     task_normal = State()
     task_hard = State()
     settings = State()
+    cancel = State()
     links = State()
     individual_courses = State()
 
@@ -95,6 +96,13 @@ async def set_start_poster(message: Message, state: FSMContext):
 async def set_start_poster(message: Message, state: FSMContext):
     if message.text != 'Дальше':
         await state.update_data({'settings': message.photo[0].file_id})
+    await bot.send_message(message.from_user.id, 'Отмена FSM: ', reply_markup=kb_control())
+    await Posters.next()
+
+@dp.message_handler(content_types=['photo', 'text'], state=Posters.cancel)
+async def set_start_poster(message: Message, state: FSMContext):
+    if message.text != 'Дальше':
+        await state.update_data({'cancel': message.photo[0].file_id})
     await bot.send_message(message.from_user.id, 'Ссылки: ', reply_markup=kb_control())
     await Posters.next()
 

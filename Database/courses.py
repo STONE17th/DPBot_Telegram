@@ -45,7 +45,7 @@ class Courses(DataBase):
     def add(self, data: dict[str, str | int]):
         new_course = (data.get('table_name'), data.get('name'), data.get('description'),
                       data.get('poster'), data.get('disc_url'), data.get('quantity'),
-                      data.get('start_date'), data.get('price'), 0)
+                      data.get('start_date'), data.get('price'), 2)
         sql = f'''INSERT INTO courses (table_name, name, description, poster, disc_url, 
         quantity, start_date, price, finished) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
         self.execute(sql, new_course, commit=True)
@@ -53,7 +53,7 @@ class Courses(DataBase):
         new_lecture = (None, None, data.get('poster'), None, None, None, None, None, 0)
         sql = f'''INSERT INTO course_{data.get('table_name')} (name, description, poster, lect_url, 
         semi_url, comp_url, date, price, finished) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
-        for _ in range(int(data.get('quantity'))):
+        for _ in range(sum(map(int, data.get('quantity').split(':')))):
             self.execute(sql, new_lecture, commit=True)
 
     def load(self, table_name: str = '') -> tuple | list[tuple]:
@@ -62,6 +62,10 @@ class Courses(DataBase):
             return self.execute(sql, (table_name,), fetchone=True)
         sql = '''SELECT * FROM courses'''
         return self.execute(sql, fetchall=True)
+
+    def activate_tg(self, table_name: str, chat_id: int, invite_link: str):
+        sql = 'UPDATE courses SET tg_url=?, tg_id=?, finished=? WHERE table_name=?'
+        self.execute(sql, (invite_link, chat_id, 0, table_name), commit=True)
 
     def update(self, data: tuple, table_name: str, index: int):
         sql = f'''UPDATE course_{table_name} SET name=?, description=?, poster=?, lect_url=?, semi_url=?, comp_url=?, 

@@ -1,6 +1,6 @@
 from aiogram.types import InputMediaPhoto, CallbackQuery
 
-from Classes import MyMessage, User
+from Classes import MyMessage, User, Course
 from Keyboards import ikb_all_courses, ikb_on_course, ikb_off_course, ikb_individual
 from Keyboards.Callback import cb_menu, course_navigation
 from loader import dp, bot, courses_db
@@ -44,6 +44,8 @@ async def menu_courses_all(_, user: User, msg: MyMessage):
     all_courses = load_courses(user.is_active_admin)
     course = all_courses.get(msg.table)
     # if user.is_admin:
+    # print(course.lecture)
+    # print(msg.id)
     lecture = course.lecture[msg.id]
     poster = lecture.poster
     caption = f'{msg.id + 1}/{course.quantity}\n' + lecture.info(True)
@@ -63,8 +65,10 @@ async def menu_courses_all(_, user: User, msg: MyMessage):
 async def finalize_course(_, msg: MyMessage, user: User):
     courses_db.finalize(msg.table)
     all_courses = load_courses()
+    print(all_courses, msg.id)
+    print(all_courses.get(msg.table).lectures)
     poster = all_courses.get(msg.table).lecture[msg.id].poster
-    caption = f'Курс {all_courses.get(msg.table).name} ' + ('финализирован' if COURSES.get(msg.table).finished < 2
+    caption = f'Курс {all_courses.get(msg.table).name} ' + ('финализирован' if all_courses.get(msg.table).finished < 2
                                                         else 'заархивирован')
     await bot.edit_message_media(media=InputMediaPhoto(media=poster, caption=caption),
                                  chat_id=msg.chat_id, message_id=msg.message_id,

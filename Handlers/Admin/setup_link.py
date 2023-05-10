@@ -2,7 +2,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import Message, ReplyKeyboardRemove
 
-from Classes import MyMessage
+from Classes import MyMessage, User
 from Keyboards import kb_control
 from Keyboards.Callback import cb_menu
 from loader import dp, bot, settings_db
@@ -20,8 +20,8 @@ class Links(StatesGroup):
 
 @dp.callback_query_handler(cb_menu.filter(button='setup_links'), state=None)
 # @dp.message_handler(commands=['setup_links'], state=None)
-async def set_you_tube(_, msg: MyMessage):
-    await bot.send_message(msg.message_id, 'Ссылка на YouTube канал: : ', reply_markup=kb_control())
+async def set_you_tube(_, msg: MyMessage, user: User):
+    await bot.send_message(user.id, 'Ссылка на YouTube канал: : ', reply_markup=kb_control())
     await Links.you_tube.set()
 
 

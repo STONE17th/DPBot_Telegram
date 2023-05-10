@@ -33,6 +33,8 @@ class Users(DataBase):
         sql = '''SELECT * FROM users WHERE tg_id=?'''
         return self.execute(sql, (tg_id,), fetchone=True)
 
+
+
     def courses_and_lectures(self, tg_id: int) -> tuple[str]:
         sql = 'SELECT courses, lectures FROM users WHERE tg_id=?'
         return self.execute(sql, (tg_id,), fetchone=True)
@@ -44,6 +46,23 @@ class Users(DataBase):
         cur = cur if cur else ''
         sql = f'''UPDATE users SET {targ} = ? WHERE tg_id=?'''
         self.execute(sql, (target + ' ' + cur, tg_id), commit=True)
+
+    def add_course(self, user_id: int, chat_id: int):
+        sql = 'SELECT name, poster, table_name FROM courses WHERE tg_id=?'
+        name, poster, table_name = self.execute(sql, (chat_id,), fetchone=True)
+        sql = 'SELECT courses FROM users WHERE tg_id=?'
+        user_courses = self.execute(sql, (user_id,), fetchone=True)[0]
+        if user_courses:
+            if table_name not in user_courses:
+                user_courses = ' '.join([table_name.strip(), user_courses.strip()])
+            else:
+                return False, poster, 'Этот курс тебе уже добавлен'
+        else:
+            user_courses = table_name
+        sql = 'UPDATE users SET courses=? WHERE tg_id=?'
+        self.execute(sql, (user_courses, user_id), commit=True)
+        return True, poster, f'Тебе добавлен курс {name}'
+
 
     def switch_alert(self, tg_id: int, option: str) -> tuple:
         sql = f'''UPDATE users SET alert_{option} = CASE WHEN alert_{option} = 1 

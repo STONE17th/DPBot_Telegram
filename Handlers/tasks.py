@@ -94,12 +94,14 @@ async def task_confirm(message: Message, state: FSMContext):
 
 
 @dp.callback_query_handler(confirm.filter(menu='new_task'), state=NewTask.task_confirm)
-async def start_command(call: CallbackQuery, msg: MyMessage, state: FSMContext):
+async def start_command(call: CallbackQuery, user: User, msg: MyMessage, state: FSMContext):
     if msg.confirm:
         data = await state.get_data()
+        poster = POSTERS.get('start_poster')
+        caption = 'Задача успешно добавлена!\nХотите добавить еще одну?'
         try:
             tasks_db.add((data.get("task_type"), data.get("task_level"), data.get("task_value")))
-            await call.answer('Задача добавлена', show_alert=True)
+            await bot.send_photo(user.id, photo=poster, caption=caption, reply_markup=ikb_confirm('task'))
         except:
             await call.answer('Ошибка добавления', show_alert=True)
         # user_list = [user[0] for user in users_db.select(alerts_news='True')]

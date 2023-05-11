@@ -78,7 +78,9 @@ async def save_links(message: Message, state: FSMContext):
     if message.text != 'Дальше':
         await state.update_data({'admin': message.text})
     data = await state.get_data()
-    settings_db.save_settings(data, 'link')
+    for key, value in data.items():
+        link = ('link', key, value, None, None, None)
+        settings_db.set(link)
     await state.reset_data()
     await state.finish()
     await bot.send_message(message.from_user.id, 'Ссылки обновлены. Главное меню /start',

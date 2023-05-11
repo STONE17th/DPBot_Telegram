@@ -36,7 +36,7 @@ def ikb_settings(msg: MyMessage, user: User) -> InlineKeyboardMarkup:
 
 def ikb_links(user: User) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(row_width=3)
-    link_list = {link[4]: link[3] for link in settings_db.load('link')}
+    link_list = {link[4] if link[4] else link[2]: link[3] for link in settings_db.load('link')}
     for text, link in link_list.items():
         keyboard.insert(InKB(url=link, text=text))
     btn_add = InKB(text='Обновить', callback_data=cb_menu.new(name='', button='setup_links'))

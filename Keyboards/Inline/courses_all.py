@@ -64,7 +64,7 @@ def ikb_off_course(user: User, menu: str, table: str, current_id: int) -> Inline
 
     if size > 1:
         keyboard.row(btn_prev, btn_next)
-    if user.is_admin:
+    if user.is_active_admin:
         if course.is_done:
             if course.finished == 1:
                 keyboard.row(btn_archive)

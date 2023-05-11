@@ -65,8 +65,6 @@ async def menu_courses_all(_, user: User, msg: MyMessage):
 async def finalize_course(_, msg: MyMessage, user: User):
     courses_db.finalize(msg.table)
     all_courses = load_courses()
-    print(all_courses, msg.id)
-    print(all_courses.get(msg.table).lectures)
     poster = all_courses.get(msg.table).lecture[msg.id].poster
     caption = f'Курс {all_courses.get(msg.table).name} ' + ('финализирован' if all_courses.get(msg.table).finished < 2
                                                         else 'заархивирован')

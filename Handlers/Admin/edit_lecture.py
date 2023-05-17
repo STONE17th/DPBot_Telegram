@@ -126,8 +126,6 @@ async def save_lecture(call: CallbackQuery, state: FSMContext, msg: MyMessage):
 
         else:
             cur_lecture = {item: None for item in KEYS}
-        print(cur_lecture)
-        print(data)
         cur_lecture.update(data)
         upd_lect = tuple([value for key, value in cur_lecture.items() if key not in ['id', 'table_name', 'finished']])
         try:

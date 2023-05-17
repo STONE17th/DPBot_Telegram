@@ -125,7 +125,7 @@ async def save_lecture(call: CallbackQuery, state: FSMContext, msg: MyMessage):
             cur_lecture = {item[0]: item[1] for item in zip(KEYS, courses_db.lecture(table_name, False, index))}
 
         else:
-            cur_lecture = {item[0]: item[1] for item in dict.fromkeys(KEYS, None)}
+            cur_lecture = {item: None for item in KEYS}
         print(cur_lecture)
         print(data)
         cur_lecture.update(data)

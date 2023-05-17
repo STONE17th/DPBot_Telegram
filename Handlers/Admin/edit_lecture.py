@@ -121,7 +121,13 @@ async def save_lecture(call: CallbackQuery, state: FSMContext, msg: MyMessage):
     if msg.confirm:
         data = await state.get_data()
         table_name, index = data.get('table_name'), data.get('id')
-        cur_lecture = {item[0]: item[1] for item in zip(KEYS, courses_db.lecture(table_name, False, index))}
+        if courses_db.lecture(table_name, False, index):
+            cur_lecture = {item[0]: item[1] for item in zip(KEYS, courses_db.lecture(table_name, False, index))}
+
+        else:
+            cur_lecture = {item[0]: item[1] for item in dict.fromkeys(KEYS, None)}
+        print(cur_lecture)
+        print(data)
         cur_lecture.update(data)
         upd_lect = tuple([value for key, value in cur_lecture.items() if key not in ['id', 'table_name', 'finished']])
         try:

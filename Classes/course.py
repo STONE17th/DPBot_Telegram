@@ -8,15 +8,14 @@ class Course:
         self.name = data[2]
         self.description = data[3]
         self.poster = data[4]
-        self.tg_url = data[5]
-        self.tg_id = data[6]
-        self.disc_url = data[7]
-        self.lectures_seminars = data[8]
-        self.start_date = data[9]
-        self.price = data[10]
-        self.finished = data[11]
-        lectures = courses_db.lecture(self.table_name, full)
-        self.lecture = [Lecture(lecture, self.table_name) for lecture in lectures]
+        self.tg_id = data[5]
+        self.tg_url = data[6]
+        self.lectures_seminars = data[7]
+        self.start_date = data[8]
+        self.price = data[9]
+        self.finished = data[10]
+        self.lecture = [Lecture(lecture, self.table_name)
+                        for lecture in courses_db.lecture(self.table_name, full)]
 
     @property
     def quantity(self) -> int:
@@ -39,8 +38,5 @@ class Course:
         return self.name + (' (Лекции)' if self.finished else ' (Онлайн)')
 
     def info(self, full: bool = False):
-        if full:
-            return f'{self.name}\n\n{self.description}\n\nРабочая группа: {self.tg_url}\nОблако Яндекс: ' \
-                   f'{self.disc_url}\n\nДата начала курса: {self.start_date}\n\nЦена курса: {self.price} руб'
         return f'{self.name}\n\n{self.description}\n\nДата начала курса: {self.start_date}' \
                f'\n\nЦена курса: {self.price} руб'

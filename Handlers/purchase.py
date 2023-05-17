@@ -1,9 +1,11 @@
 from os import getenv
+
 from aiogram.types import Message, PreCheckoutQuery, LabeledPrice, ContentType
 
-from Classes import MyMessage, User
+from Classes import MyMessage, User, Course, Lecture
+from Keyboards import ikb_purchase_done
 from Keyboards.Callback import course_navigation
-from loader import dp, users_db
+from loader import bot, dp, users_db, courses_db
 from temp import load_courses
 
 
@@ -32,9 +34,17 @@ async def purchase(_, msg: MyMessage):
 
     @dp.message_handler(content_types=ContentType.SUCCESSFUL_PAYMENT)
     async def process_pay(message: Message, user: User):
-        my_buy = message.successful_payment.invoice_payload
-        users_db.purchase(user.id, my_buy)
-        txt = 'лекции'if ':' in my_buy else 'курсу'
-        await message.answer(text=f'Спасибо за покупку!\nДоступ к {txt}'
-                                  f'будет во вкладке "Мои курсы"\n\n'
-                                  f'Вернуться в главное меню /start')
+        data = message.successful_payment.invoice_payload
+        # try:
+        users_db.purchase(user.id, data)
+        txt = 'курса' if ':' not in data else 'лекции'
+        purchase_data = [data.split(':')[0], int(data.split(':')[1])] if ':' in data else [data]
+        my_product = courses_db.my_purchase(*purchase_data)
+        my_product = Lecture(my_product, purchase_data[0]) if ':' in data else Course(my_product)
+        poster = my_product.poster
+        caption = f'Поздравляем с приобретением ' + txt + f' "{my_product.name}"\n' + \
+                  f'\nДоступ к материалам {txt} открыт во вкладке "Мои курсы"\n' + (
+                      '' if ':' in data else 'Не забудь подписаться на рабочую группу в TG (кнопка ниже)')
+        url = None if ':' in data else my_product.tg_url
+        await bot.send_photo(message.from_user.id, photo=poster, caption=caption,
+                             reply_markup=ikb_purchase_done(url))

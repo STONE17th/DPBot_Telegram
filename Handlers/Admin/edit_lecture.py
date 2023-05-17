@@ -38,7 +38,7 @@ async def desc_catch(message: Message, user: User, state: FSMContext):
         if message.text in ['Лекция', 'Семинар']:
             data = 1 if message.text == 'Лекция' else 2
             await state.update_data({'lect_semi': data})
-        await message.answer(text='Введите описание лекции:', reply_markup=kb_control())
+        await message.answer(text='Введите название лекции:', reply_markup=kb_control())
         await Lecture.next()
     else:
         await bot.send_message(user.id, 'Лекция или семинар:', reply_markup=kb_control('lect_semi'))
@@ -87,7 +87,7 @@ async def price_catch(message: Message, state: FSMContext):
 async def price_catch(message: Message, state: FSMContext):
     if message.text != 'Дальше':
         await state.update_data({'comp_url': message.text})
-    await message.answer(text='Введите дату начала лекции:', reply_markup=kb_control())
+    await message.answer(text='Введите дату начала лекции:', reply_markup=kb_control('date'))
     await Lecture.next()
 
 

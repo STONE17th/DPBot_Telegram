@@ -36,11 +36,7 @@ def load_links():
 
 
 def load_courses(full: bool = False):
-    courses = {}
-    data = courses_db.load()
-    for course in data:
-        courses[course[1]] = Course(course, full)
-    return courses
+    return {course[1]: Course(course, full) for course in courses_db.load()}
 
 
 def load_temp():

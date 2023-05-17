@@ -33,3 +33,4 @@ class Settings(DataBase):
     def select(self, platform: str) -> str:
         sql = 'SELECT value FROM settings WHERE name=?'
         return self.execute(sql, (platform,), fetchone=True)[0]
+

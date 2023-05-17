@@ -47,11 +47,11 @@ async def users_courses(_, msg: MyMessage, user: User):
                       for lecture in lectures.split()]
     cur_lecture = Lecture(cur_course[msg.id], msg.table)
     poster = cur_lecture.poster if cur_lecture.is_finished else POSTERS.get('no_lecture')
-    caption = f'{msg.id + 1}/{len(cur_course)}\n{cur_lecture.info(False, False)}'
-    buttons = (cur_lecture.lect_url, cur_lecture.semi_url, cur_lecture.comp_url)
+    caption = f'{msg.id + 1}/{len(cur_course)}\n{cur_lecture.info(False)}'
+    # buttons = (cur_lecture.lect_url, cur_lecture.semi_url, cur_lecture.comp_url)
 
     await bot.edit_message_media(media=InputMediaPhoto(media=poster, caption=caption),
                                  chat_id=msg.chat_id,
                                  message_id=msg.message_id,
-                                 reply_markup=ikb_course_my_navigation('courses_my', buttons, msg.id,
+                                 reply_markup=ikb_course_my_navigation('courses_my', cur_lecture, msg.id,
                                                                        len(cur_course), msg.table))

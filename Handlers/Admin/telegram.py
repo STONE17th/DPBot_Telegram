@@ -12,6 +12,7 @@ async def activate_chat(message: Message):
     table_name = message.text.split()[1]
     chat_id = message.chat.id
     invite: ChatInviteLink = await bot.create_chat_invite_link(chat_id)
+    print(chat_id)
     # try:
     courses_db.activate_tg(table_name, chat_id, invite.invite_link)
         # await message.answer('Группа TG успешно активирована')

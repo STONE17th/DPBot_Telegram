@@ -89,13 +89,13 @@ async def save_new_course(call: CallbackQuery, msg: MyMessage, state: FSMContext
         caption = f'Курс {data.get("name")} добавлен в список Dirty Python Bot'
         poster = data.get('poster')
         message = (poster, caption)
-        try:
-            courses_db.add(data)
-            await user_notify('courses', message)
-            await user_notify('news', message)
-        except:
-            poster = POSTERS.get('cancel')
-            caption = 'Ошибка добавления в базу!'
+        # try:
+        courses_db.add(data)
+            # await user_notify('courses', message)
+            # await user_notify('news', message)
+        # except:
+        #     poster = POSTERS.get('cancel')
+        #     caption = 'Ошибка добавления в базу!'
     else:
         poster = POSTERS.get('cancel')
         caption = 'ОТМЕНА!'

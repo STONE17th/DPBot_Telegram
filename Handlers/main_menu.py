@@ -30,31 +30,31 @@ async def start_command(_, msg: MyMessage):
         await bot.delete_message(chat_id=msg.chat_id, message_id=msg.message_id)
     except MessageCantBeDeleted:
         pass
-@dp.message_handler(commands=['start'])
-async def cmd_start(message: Message, user: User):
-    users_db.check(message.from_user.id)
-    await message.answer(user.admin)
-    # settings_db.set()
-    # print(settings_db.load())
+# @dp.message_handler(commands=['start'])
+# async def cmd_start(message: Message, user: User):
+#     users_db.check(message.from_user.id)
+#     await message.answer(user.admin)
+#     settings_db.set()
+#     print(settings_db.load())
 
-@dp.message_handler(content_types=['photo'])
-async def experimental(message: Message):
-    print(len(message.photo[0].file_id))
+# @dp.message_handler(content_types=['photo'])
+# async def experimental(message: Message):
+#     print(len(message.photo[0].file_id))
 
 
-@dp.message_handler(commands=['add'])
-async def cmd_add(message: Message):
-    prod = 'new_table'
-    my_prod = [prod.split(':')[0], int(prod.split(':')[1])] if ':' in prod else [prod]
-    my_product = courses_db.my_purchase(*my_prod)
-    print(my_product)
-    my_product = Lecture(my_product, my_prod[0]) if ':' in prod else Course(my_product)
-    print(my_product.poster)
-    # poster = my_product[4]
-    # content = ('poster', 'start_poster', 'kjfskghkghdk', None, None, None)
-    # settings_db.set(content)
-    # # users_db.check(message.from_user.id)
-    # await message.answer('Загружено')
+# @dp.message_handler(commands=['add'])
+# async def cmd_add(message: Message):
+#     prod = 'new_table'
+#     my_prod = [prod.split(':')[0], int(prod.split(':')[1])] if ':' in prod else [prod]
+#     my_product = courses_db.my_purchase(*my_prod)
+#     print(my_product)
+#     my_product = Lecture(my_product, my_prod[0]) if ':' in prod else Course(my_product)
+#     print(my_product.poster)
+#     poster = my_product[4]
+#     content = ('poster', 'start_poster', 'kjfskghkghdk', None, None, None)
+#     settings_db.set(content)
+#     # users_db.check(message.from_user.id)
+#     await message.answer('Загружено')
 
 
 

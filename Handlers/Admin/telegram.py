@@ -13,11 +13,11 @@ async def activate_chat(message: Message):
     chat_id = message.chat.id
     invite: ChatInviteLink = await bot.create_chat_invite_link(chat_id)
     print(chat_id)
-    # try:
-    courses_db.activate_tg(table_name, chat_id, invite.invite_link)
-        # await message.answer('Группа TG успешно активирована')
-    # except:
-    #     await message.answer('Ошибка при активации группы')
+    try:
+        courses_db.activate_tg(table_name, chat_id, invite.invite_link)
+        await message.answer('Группа TG успешно активирована')
+    except:
+        await message.answer('Ошибка при активации группы')
 
 
 @dp.message_handler(commands=['add_me'])
